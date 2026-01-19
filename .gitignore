@@ -1,0 +1,12 @@
+node_modules
+.env
+.env.*
+
+.neon_local/
+coverage/
+.github/
+logs
+
+.DS_Store
+drizzle/
+*.log
