@@ -7,8 +7,15 @@
     "dev": "nodemon src/index.js",
     "test": "vitest run",
     "test:watch": "vitest",
+    "lint:fix": "eslint . --fix",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "dev:docker": "sh scripts/dev.sh",
+    "prod:docker": "sh scripts/prod.sh"
   },
   "type": "module",
   "keywords": [
