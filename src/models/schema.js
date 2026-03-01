@@ -1,3 +1,4 @@
 export * from './user.js';
 export * from './movie.js';
+export * from './theater.js';
 export * from './booking.js';

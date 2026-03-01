@@ -9,17 +9,21 @@ export class AppError extends Error {
   }
 }
 
-export const formatErrorPayload = (err) => ({
+export const formatErrorPayload = err => ({
   success: false,
   message: err.message || 'Unexpected error',
   statusCode: err.statusCode || 500,
   details: err.details || null,
 });
 
-export const buildExpressErrorHandler = (logger) => (err, _req, res, _next) => {
-  const appError = err instanceof AppError 
-    ? err 
-    : new AppError(err.message || 'Internal Server Error', err.statusCode || 500);
+export const buildExpressErrorHandler = logger => (err, _req, res, _next) => {
+  const appError =
+    err instanceof AppError
+      ? err
+      : new AppError(
+        err.message || 'Internal Server Error',
+        err.statusCode || 500
+      );
 
   if (!appError.isOperational && logger) {
     logger.error(err);
