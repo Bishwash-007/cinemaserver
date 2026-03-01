@@ -30,7 +30,7 @@ services:
       target: development
     container_name: cinema-app-dev
     ports:
-      - '${PORT:-3000}:3000'
+      - '${PORT:-5500}:5500'
     env_file:
       - .env.development
     volumes:
