@@ -16,7 +16,13 @@
     "db:push": "drizzle-kit push",
     "dev:docker": "sh scripts/dev.sh",
     "prod:docker": "sh scripts/prod.sh",
-    "db:seed": "node scripts/seed.js"
+    "prod:docker:down": "sh scripts/prod.sh down",
+    "prod:docker:restart": "sh scripts/prod.sh restart",
+    "prod:docker:logs": "sh scripts/prod.sh logs",
+    "prod:docker:status": "sh scripts/prod.sh status",
+    "db:seed": "node scripts/seed.js",
+    "db:reset": "node scripts/db-reset.js",
+    "db:reset:confirm": "node scripts/db-reset.js --confirm"
   },
   "type": "module",
   "keywords": [
@@ -38,6 +44,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
+    "nodemailer": "^8.0.1",
     "winston": "^3.19.0",
     "zod": "^4.3.5"
   },
