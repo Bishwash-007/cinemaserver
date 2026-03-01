@@ -16,14 +16,10 @@ import {
   bookingDiscountsTable,
 } from '../models/booking.js';
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
-
 const dateRange = (from, to) => [
   gte(bookingsTable.createdAt, new Date(from)),
   lte(bookingsTable.createdAt, new Date(to)),
 ];
-
-// ─── Overview (Dashboard Summary) ────────────────────────────────────────────
 
 export const getOverview = async () => {
   const [revenue] = await db
@@ -89,8 +85,6 @@ export const getOverview = async () => {
   };
 };
 
-// ─── Revenue Report ───────────────────────────────────────────────────────────
-
 export const getRevenueSummary = async (from, to) => {
   const [row] = await db
     .select({
@@ -153,8 +147,6 @@ export const getRevenueByProvider = async (from, to) =>
     .groupBy(bookingPaymentsTable.provider)
     .orderBy(sql`SUM(${bookingPaymentsTable.amount}) DESC`);
 
-// ─── Booking Report ───────────────────────────────────────────────────────────
-
 export const getBookingStatusBreakdown = async (from, to) =>
   db
     .select({
@@ -185,8 +177,6 @@ export const getBookingTrend = async (from, to, granularity = 'day') => {
     .orderBy(sql`date_trunc(${grain}, ${bookingsTable.createdAt})`);
 };
 
-// ─── Movie Performance Report ─────────────────────────────────────────────────
-
 export const getMoviePerformance = async (from, to, limit = 20) =>
   db
     .select({
@@ -216,8 +206,6 @@ export const getMoviePerformance = async (from, to, limit = 20) =>
     )
     .orderBy(sql`COUNT(${bookingTicketsTable.id}) DESC`)
     .limit(limit);
-
-// ─── Occupancy Report ─────────────────────────────────────────────────────────
 
 export const getShowtimeOccupancy = async (from, to, limit = 50) =>
   db
@@ -306,8 +294,6 @@ export const getTheaterOccupancy = async (from, to) =>
     .groupBy(theatersTable.id, theatersTable.name, theatersTable.city)
     .orderBy(sql`SUM(${bookingsTable.totalAmount}) DESC NULLS LAST`);
 
-// ─── User Report ──────────────────────────────────────────────────────────────
-
 export const getUserGrowth = async (from, to, granularity = 'day') => {
   const allowed = ['day', 'week', 'month', 'year'];
   const grain = allowed.includes(granularity) ? granularity : 'day';
@@ -365,8 +351,6 @@ export const getTopSpenders = async (limit = 10) =>
     .orderBy(sql`SUM(${bookingsTable.totalAmount}) DESC NULLS LAST`)
     .limit(limit);
 
-// ─── Discount Report ──────────────────────────────────────────────────────────
-
 export const getDiscountUsageReport = async () =>
   db
     .select({
@@ -398,10 +382,7 @@ export const getDiscountUsageReport = async () =>
     )
     .orderBy(sql`COUNT(${bookingDiscountsTable.id}) DESC`);
 
-// ─── Receipt Query ────────────────────────────────────────────────────────────
-
 export const getReceiptData = async bookingId => {
-  // Booking + user
   const [bookingRow] = await db
     .select({
       booking: {
@@ -424,7 +405,6 @@ export const getReceiptData = async bookingId => {
 
   if (!bookingRow) return null;
 
-  // Showtime + screen + theater + movie
   const [showtimeRow] = await db
     .select({
       showtime: {
@@ -459,7 +439,6 @@ export const getReceiptData = async bookingId => {
     .innerJoin(moviesTable, eq(moviesTable.id, showtimesTable.movieId))
     .where(eq(showtimesTable.id, bookingRow.showtimeId));
 
-  // Tickets with seat info
   const tickets = await db
     .select({
       id: bookingTicketsTable.id,
@@ -475,14 +454,12 @@ export const getReceiptData = async bookingId => {
     .innerJoin(seatsTable, eq(seatsTable.id, bookingTicketsTable.seatId))
     .where(eq(bookingTicketsTable.bookingId, bookingId));
 
-  // Payment
   const [payment] = await db
     .select()
     .from(bookingPaymentsTable)
     .where(eq(bookingPaymentsTable.bookingId, bookingId))
     .orderBy(sql`${bookingPaymentsTable.createdAt} DESC`);
 
-  // Discount (if any)
   const [discountRow] = await db
     .select({
       appliedAmount: bookingDiscountsTable.appliedAmount,

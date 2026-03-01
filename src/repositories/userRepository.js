@@ -16,7 +16,6 @@ export const USER_SAFE_FIELDS = {
   updatedAt: usersTable.updatedAt,
 };
 
-// Full row — includes sensitive fields; only use for auth operations
 export const findUserByEmail = async email =>
   db
     .select()
@@ -65,7 +64,6 @@ export const createUser = async data =>
     })
     .then(([row]) => row);
 
-// Performs updates and returns safe fields; respects soft-delete
 export const updateUser = async (id, data) =>
   db
     .update(usersTable)
@@ -74,7 +72,6 @@ export const updateUser = async (id, data) =>
     .returning(USER_SAFE_FIELDS)
     .then(([row]) => row ?? null);
 
-// Performs updates without returning safe fields (e.g. password reset, token clear)
 export const updateUserUnsafe = async (id, data) =>
   db.update(usersTable).set(data).where(eq(usersTable.id, id));
 

@@ -22,13 +22,11 @@ const jsonFormat = winston.format.combine(
 );
 
 const transports = [
-  // Always log to console — required on Vercel (stdout/stderr only)
   new winston.transports.Console({
     format: isProduction ? jsonFormat : consoleFormat,
   }),
 ];
 
-// File transports only work outside serverless environments
 if (!isVercel) {
   transports.push(
     new winston.transports.File({

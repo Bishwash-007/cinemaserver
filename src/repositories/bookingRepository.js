@@ -10,12 +10,8 @@ import {
 } from '../models/booking.js';
 import { seatsTable } from '../models/theater.js';
 
-// ─── Seats (needed during booking creation) ───────────────────────────────────
-
 export const findSeatsByIds = async seatIds =>
   db.select().from(seatsTable).where(inArray(seatsTable.id, seatIds));
-
-// ─── Seat Locks ───────────────────────────────────────────────────────────────
 
 export const findSeatLocks = async (showtimeId, seatIds) =>
   db
@@ -51,8 +47,6 @@ export const deleteAllUserSeatLocks = async (userId, showtimeId) =>
         eq(seatLocksTable.showtimeId, showtimeId)
       )
     );
-
-// ─── Bookings ─────────────────────────────────────────────────────────────────
 
 export const insertBooking = async data =>
   db
@@ -101,8 +95,6 @@ export const findAllBookings = async ({ status, limit, offset }) => {
     .orderBy(bookingsTable.createdAt);
 };
 
-// ─── Tickets ──────────────────────────────────────────────────────────────────
-
 export const insertTickets = async values =>
   db.insert(bookingTicketsTable).values(values).returning();
 
@@ -112,14 +104,9 @@ export const findTicketsByBooking = async bookingId =>
     .from(bookingTicketsTable)
     .where(eq(bookingTicketsTable.bookingId, bookingId));
 
-// ─── Booking History ──────────────────────────────────────────────────────────
-
 export const insertBookingHistory = async data =>
   db.insert(bookingHistoryTable).values(data);
 
-// ─── Discount Codes ───────────────────────────────────────────────────────────
-
-// Only active, valid codes
 export const findActiveDiscountByCode = async code =>
   db
     .select()
@@ -132,7 +119,6 @@ export const findActiveDiscountByCode = async code =>
     )
     .then(([row]) => row ?? null);
 
-// Any code regardless of active status (used for FK recording)
 export const findDiscountByCode = async code =>
   db
     .select()
@@ -159,8 +145,6 @@ export const incrementDiscountUsage = async (discountId, currentCount) =>
     .update(discountCodesTable)
     .set({ usageCount: currentCount + 1, updatedAt: new Date() })
     .where(eq(discountCodesTable.id, discountId));
-
-// ─── Booking Discounts ────────────────────────────────────────────────────────
 
 export const insertBookingDiscount = async data =>
   db.insert(bookingDiscountsTable).values(data);

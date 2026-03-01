@@ -11,7 +11,6 @@ export const register = async (req, res, next) => {
       success: true,
       message: 'Registration successful. Please verify your email.',
       data: { user },
-      // Only expose in non-production for testing
       ...(process.env.NODE_ENV !== 'production' && { verificationToken }),
     });
   } catch (err) {
