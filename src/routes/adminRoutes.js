@@ -43,6 +43,10 @@ import {
   createDiscountCodeSchema,
   updateBookingStatusSchema,
 } from '../validations/bookingValidations.js';
+import {
+  reportQuerySchema,
+  reportMoviesQuerySchema,
+} from '../validations/reportValidations.js';
 
 const router = Router();
 
@@ -71,11 +75,27 @@ router.patch(
   updateBookingStatus
 );
 router.get('/reports/overview', getDashboardOverview);
-router.get('/reports/revenue', getRevenueReport);
-router.get('/reports/bookings', getBookingsReport);
-router.get('/reports/movies', getMoviesReport);
-router.get('/reports/occupancy', getOccupancyReport);
-router.get('/reports/users', getUsersReport);
+router.get(
+  '/reports/revenue',
+  validateQuery(reportQuerySchema),
+  getRevenueReport
+);
+router.get(
+  '/reports/bookings',
+  validateQuery(reportQuerySchema),
+  getBookingsReport
+);
+router.get(
+  '/reports/movies',
+  validateQuery(reportMoviesQuerySchema),
+  getMoviesReport
+);
+router.get(
+  '/reports/occupancy',
+  validateQuery(reportQuerySchema),
+  getOccupancyReport
+);
+router.get('/reports/users', validateQuery(reportQuerySchema), getUsersReport);
 router.get('/reports/discounts', getDiscountsReport);
 
 export default router;
