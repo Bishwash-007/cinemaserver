@@ -41,6 +41,7 @@ import {
 import {
   bookingQuerySchema,
   createDiscountCodeSchema,
+  updateBookingStatusSchema,
 } from '../validations/bookingValidations.js';
 
 const router = Router();
@@ -64,7 +65,11 @@ router.post(
   validate(createDiscountCodeSchema),
   createDiscountCode
 );
-router.patch('/bookings/:id', updateBookingStatus);
+router.patch(
+  '/bookings/:id',
+  validate(updateBookingStatusSchema),
+  updateBookingStatus
+);
 router.get('/reports/overview', getDashboardOverview);
 router.get('/reports/revenue', getRevenueReport);
 router.get('/reports/bookings', getBookingsReport);

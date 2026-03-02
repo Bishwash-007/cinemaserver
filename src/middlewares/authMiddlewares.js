@@ -24,12 +24,12 @@ export const authenticate = (req, _res, next) => {
 
 export const authorize =
   (...roles) =>
-    (req, _res, next) => {
-      if (!req.user || !roles.includes(req.user.role)) {
-        return next(new AppError('Forbidden: insufficient permissions', 403));
-      }
-      next();
-    };
+  (req, _res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return next(new AppError('Forbidden: insufficient permissions', 403));
+    }
+    next();
+  };
 
 export const validate = schema => (req, _res, next) => {
   const result = schema.safeParse(req.body);
@@ -53,6 +53,10 @@ export const validateQuery = schema => (req, _res, next) => {
       )
     );
   }
-  req.query = result.data;
+  Object.defineProperty(req, 'query', {
+    value: result.data,
+    writable: true,
+    configurable: true,
+  });
   next();
 };

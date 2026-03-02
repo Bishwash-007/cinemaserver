@@ -182,7 +182,8 @@ export const getUserBookings = async (userId, { page, limit, status }) => {
 
 export const getAllBookings = async ({ page, limit, status }) => {
   const offset = (page - 1) * limit;
-  const bookings = await bookingRepo.findAllBookings({ status, limit, offset });
+  const bookings =
+    (await bookingRepo.findAllBookings({ status, limit, offset })) ?? [];
   return { bookings, page, limit };
 };
 
@@ -253,7 +254,12 @@ export const lockSeats = async (userId, showtimeId, seatIds) => {
   return { locks, expiresAt };
 };
 
-export const updateBookingStatus = async (adminId, bookingId, status, reason) => {
+export const updateBookingStatus = async (
+  adminId,
+  bookingId,
+  status,
+  reason
+) => {
   const booking = await bookingRepo.findBookingById(bookingId);
   if (!booking) throw new AppError('Booking not found', 404);
 
