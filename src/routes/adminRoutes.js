@@ -18,6 +18,7 @@ import {
 import {
   getAllBookings,
   createDiscountCode,
+  updateBookingStatus,
 } from '../controllers/bookingControllers.js';
 import {
   getDashboardOverview,
@@ -63,6 +64,7 @@ router.post(
   validate(createDiscountCodeSchema),
   createDiscountCode
 );
+router.patch('/bookings/:id', updateBookingStatus);
 router.get('/reports/overview', getDashboardOverview);
 router.get('/reports/revenue', getRevenueReport);
 router.get('/reports/bookings', getBookingsReport);

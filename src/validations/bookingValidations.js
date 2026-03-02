@@ -6,6 +6,11 @@ export const createBookingSchema = z.object({
   discountCode: z.string().optional(),
 });
 
+export const updateBookingStatusSchema = z.object({
+  bookingStatus: z.enum(['pending', 'confirmed', 'cancelled', 'failed']),
+  reason: z.string().optional(),
+});
+
 export const cancelBookingSchema = z.object({
   reason: z.string().max(500).optional(),
 });

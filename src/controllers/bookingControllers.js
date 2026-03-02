@@ -94,3 +94,20 @@ export const lockSeats = async (req, res, next) => {
     next(err);
   }
 };
+
+
+export const updateBookingStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { bookingStatus, reason } = req.body;
+    const updated = await bookingServices.updateBookingStatus(
+      req.user.id,
+      Number(id),
+      bookingStatus,
+      reason,
+    );
+    res.json({ success: true, data: updated });
+  } catch (err) {
+    next(err);
+  }
+};

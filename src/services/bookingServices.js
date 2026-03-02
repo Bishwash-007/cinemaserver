@@ -252,3 +252,28 @@ export const lockSeats = async (userId, showtimeId, seatIds) => {
   const locks = await bookingRepo.insertSeatLocks(lockValues);
   return { locks, expiresAt };
 };
+
+export const updateBookingStatus = async (adminId, bookingId, status, reason) => {
+  const booking = await bookingRepo.findBookingById(bookingId);
+  if (!booking) throw new AppError('Booking not found', 404);
+
+  if (booking.bookingStatus === status) {
+    throw new AppError(`Booking is already ${status}`, 400);
+  }
+
+  const prevStatus = booking.bookingStatus;
+  const updated = await bookingRepo.updateBooking(bookingId, {
+    bookingStatus: status,
+    updatedAt: new Date(),
+  });
+
+  await bookingRepo.insertBookingHistory({
+    bookingId,
+    previousStatus: prevStatus,
+    newStatus: status,
+    reason: reason || `Status changed to ${status} by admin`,
+    actorId: adminId,
+  });
+
+  return updated;
+};
